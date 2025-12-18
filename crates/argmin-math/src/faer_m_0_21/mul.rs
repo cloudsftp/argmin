@@ -2,7 +2,7 @@ use crate::ArgminMul;
 use faer::{
     mat::{AsMatMut, AsMatRef},
     reborrow::{IntoConst, Reborrow, ReborrowMut},
-    Mat, MatMut, MatRef,
+    unzip, zip, Col, ColMut, ColRef, Mat, MatMut, MatRef,
 };
 use faer_traits::{ComplexField, MulByRef};
 use std::ops::Mul;
@@ -85,5 +85,24 @@ impl<E: ComplexField> ArgminMul<Mat<E>, Mat<E>> for Mat<E> {
     #[inline]
     fn mul(&self, other: &Mat<E>) -> Mat<E> {
         <_ as ArgminMul<_, _>>::mul(&self.as_mat_ref(), &other.as_mat_ref())
+    }
+}
+
+/// ColRef * ColRef -> Col (pointwise multiplication)
+impl<E: ComplexField> ArgminMul<ColRef<'_, E>, Col<E>> for ColRef<'_, E> {
+    #[inline]
+    fn mul(&self, other: &ColRef<'_, E>) -> Col<E> {
+        let mut result = Col::zeros(self.nrows()); // TODO: why not possible like sub
+        zip!(&mut result, self, other)
+            .for_each(|unzip!(result, this, other)| *result = this.mul_by_ref(other));
+        result
+    }
+}
+
+/// Col * Col -> Col (pointwise multiplication)
+impl<E: ComplexField> ArgminMul<Col<E>, Col<E>> for Col<E> {
+    #[inline]
+    fn mul(&self, other: &Col<E>) -> Col<E> {
+        <_ as ArgminMul<_, _>>::mul(&self.as_ref(), &other.as_ref())
     }
 }

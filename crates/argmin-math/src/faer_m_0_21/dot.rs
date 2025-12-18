@@ -1,5 +1,5 @@
 use crate::ArgminDot;
-use faer::{mat::AsMatRef, Mat, MatRef};
+use faer::{mat::AsMatRef, Col, ColRef, Mat, MatRef};
 use faer_traits::ComplexField;
 use std::ops::Mul;
 
@@ -43,6 +43,26 @@ mod matrix_matrix_multiplication {
         #[inline]
         fn dot(&self, other: &Mat<E>) -> Mat<E> {
             <_ as ArgminDot<_, _>>::dot(&self.as_mat_ref(), &other.as_mat_ref())
+        }
+    }
+}
+
+mod matrix_column_multiplication {
+    use super::*;
+
+    /// MatRef . ColRef -> Col
+    impl<E: ComplexField> ArgminDot<ColRef<'_, E>, Col<E>> for MatRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &ColRef<'_, E>) -> Col<E> {
+            self * other
+        }
+    }
+
+    /// Mat . Col -> Col
+    impl<E: ComplexField> ArgminDot<Col<E>, Col<E>> for Mat<E> {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> Col<E> {
+            <_ as ArgminDot<_, _>>::dot(&self.as_mat_ref(), &other.as_ref())
         }
     }
 }
@@ -105,6 +125,27 @@ mod scalar_product {
         #[inline]
         fn dot(&self, other: &Mat<E>) -> E {
             <_ as ArgminDot<_, _>>::dot(&self.as_mat_ref(), &other.as_mat_ref())
+        }
+    }
+
+    /// ColRef . ColRef -> Col
+    impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<ColRef<'_, E>, E> for ColRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &ColRef<'_, E>) -> E {
+            assert_eq!(
+                self.nrows(),
+                other.nrows(),
+                "vectors for dot product must have same number of elements"
+            );
+            self.conjugate().transpose() * other
+        }
+    }
+
+    /// Col . Col -> Col
+    impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<Col<E>, E> for Col<E> {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> E {
+            <_ as ArgminDot<_, _>>::dot(&self.as_ref(), &other.as_ref())
         }
     }
 }
