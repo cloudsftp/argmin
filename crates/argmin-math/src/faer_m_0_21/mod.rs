@@ -8,6 +8,7 @@
 #![allow(unused_imports)]
 
 mod add;
+mod col;
 mod conj;
 mod div;
 mod dot;
