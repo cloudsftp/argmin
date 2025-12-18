@@ -1,9 +1,5 @@
 use crate::ArgminSub;
-use faer::{
-    mat::AsMatRef,
-    reborrow::{IntoConst, Reborrow, ReborrowMut},
-    unzip, zip, Col, ColMut, ColRef, Mat, MatMut, MatRef,
-};
+use faer::{mat::AsMatRef, unzip, zip, Mat, MatRef};
 use faer_traits::{ComplexField, Conjugate};
 use std::ops::{Sub, SubAssign};
 
@@ -88,21 +84,5 @@ impl<E: ComplexField> ArgminSub<Mat<E>, Mat<E>> for Mat<E> {
     #[inline]
     fn sub(&self, other: &Mat<E>) -> Mat<E> {
         <_ as ArgminSub<_, _>>::sub(&self.as_mat_ref(), &other.as_mat_ref())
-    }
-}
-
-/// ColRef / ColRef -> Col
-impl<E: ComplexField> ArgminSub<ColRef<'_, E>, Col<E>> for ColRef<'_, E> {
-    #[inline]
-    fn sub(&self, other: &ColRef<'_, E>) -> Col<E> {
-        zip!(self, other).map(|unzip!(this, other)| this.sub_by_ref(other))
-    }
-}
-
-/// Col / Col -> Col
-impl<E: ComplexField> ArgminSub<Col<E>, Col<E>> for Col<E> {
-    #[inline]
-    fn sub(&self, other: &Col<E>) -> Col<E> {
-        <_ as ArgminSub<_, _>>::sub(&self.as_ref(), &other.as_ref())
     }
 }
