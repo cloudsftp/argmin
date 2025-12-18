@@ -1,11 +1,6 @@
 use crate::ArgminMul;
-use faer::{
-    mat::AsMatRef,
-    reborrow::{IntoConst, Reborrow, ReborrowMut},
-    unzip, zip, Mat, MatRef,
-};
+use faer::{mat::AsMatRef, unzip, zip, Mat, MatRef};
 use faer_traits::ComplexField;
-use std::ops::Mul;
 
 /// MatRef * Scalar -> Mat
 impl<E> ArgminMul<E, Mat<E>> for MatRef<'_, E>

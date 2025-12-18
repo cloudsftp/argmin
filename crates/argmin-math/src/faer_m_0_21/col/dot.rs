@@ -14,6 +14,22 @@ mod matrix_column_multiplication {
         }
     }
 
+    /// Mat . ColRef -> Col
+    impl<E: ComplexField> ArgminDot<ColRef<'_, E>, Col<E>> for Mat<E> {
+        #[inline]
+        fn dot(&self, other: &ColRef<'_, E>) -> Col<E> {
+            <_ as ArgminDot<_, _>>::dot(&self.as_ref(), other)
+        }
+    }
+
+    /// MatRef . ColRef -> Col
+    impl<E: ComplexField> ArgminDot<Col<E>, Col<E>> for MatRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> Col<E> {
+            <_ as ArgminDot<_, _>>::dot(self, &other.as_ref())
+        }
+    }
+
     /// Mat . Col -> Col
     impl<E: ComplexField> ArgminDot<Col<E>, Col<E>> for Mat<E> {
         #[inline]
@@ -39,6 +55,22 @@ mod scalar_product {
                 "vectors for dot product must have same number of elements"
             );
             self.conjugate().transpose() * other
+        }
+    }
+
+    /// Col . ColRef -> Col
+    impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<ColRef<'_, E>, E> for Col<E> {
+        #[inline]
+        fn dot(&self, other: &ColRef<'_, E>) -> E {
+            <_ as ArgminDot<_, _>>::dot(&self.as_ref(), other)
+        }
+    }
+
+    /// ColRef . Col -> Col
+    impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<Col<E>, E> for ColRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> E {
+            <_ as ArgminDot<_, _>>::dot(self, &other.as_ref())
         }
     }
 
