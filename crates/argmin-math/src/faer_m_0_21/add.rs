@@ -1,11 +1,9 @@
 use crate::ArgminAdd;
 use faer::{
     mat::{AsMatMut, AsMatRef},
-    reborrow::{IntoConst, Reborrow, ReborrowMut},
     unzip, zip, Mat, MatMut, MatRef,
 };
 use faer_traits::{AddByRef, ComplexField};
-use std::ops::{Add, AddAssign};
 
 /// MatRef + Scalar -> Mat
 impl<E, R, C> ArgminAdd<E, Mat<E, R, C>> for MatRef<'_, E, R, C>

@@ -1,7 +1,6 @@
 use crate::ArgminSub;
 use faer::{unzip, zip, Col, ColMut, ColRef};
 use faer_traits::{ComplexField, Conjugate, SubByRef};
-use std::ops::{Sub, SubAssign};
 
 /// ColRef / Scalar -> Col
 impl<E: ComplexField> ArgminSub<E, Col<E>> for ColRef<'_, E> {
@@ -27,6 +26,16 @@ where
     #[inline]
     fn sub(&self, other: &ColRef<'a, E>) -> Col<E> {
         zip!(other).map(|unzip!(other)| self.sub_by_ref(other))
+    }
+}
+/// Scalar / Col -> Col
+impl<'a, E> ArgminSub<Col<E>, Col<E>> for E
+where
+    E: ComplexField,
+{
+    #[inline]
+    fn sub(&self, other: &Col<E>) -> Col<E> {
+        <_ as ArgminSub<_, _>>::sub(self, &other.as_ref())
     }
 }
 
