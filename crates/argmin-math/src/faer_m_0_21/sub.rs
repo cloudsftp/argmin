@@ -3,7 +3,7 @@ use faer::{mat::AsMatRef, unzip, zip, Mat, MatRef};
 use faer_traits::{ComplexField, Conjugate, SubByRef};
 use std::ops::{Sub, SubAssign};
 
-/// MatRef / Scalar -> MatRef
+/// MatRef / Scalar -> Mat
 impl<E> ArgminSub<E, Mat<E>> for MatRef<'_, E>
 where
     E: ComplexField,
