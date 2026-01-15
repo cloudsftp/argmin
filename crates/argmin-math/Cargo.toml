@@ -59,7 +59,7 @@ paste = "1"
 approx = "0.5.0"
 
 [features]
-default = ["primitives", "vec", "rand", "faer_v0_23"]
+default = ["primitives", "vec", "rand"]
 latest_all = ["primitives", "vec", "rand", "nalgebra_latest", "ndarray_latest"]
 
 # primitives
