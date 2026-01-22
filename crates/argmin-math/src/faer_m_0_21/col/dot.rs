@@ -82,3 +82,44 @@ mod scalar_product {
         }
     }
 }
+
+//@note(clouds) implemented for compatibility with the nalgebra implementations
+// see geo's comment in the faer_m_0_21 module (super)
+mod multiply_matrix_with_scalar {
+    use super::*;
+    use crate::ArgminMul;
+    use faer_traits::ComplexField;
+    use std::ops::Mul;
+
+    // ColRef . Scalar -> Col
+    impl<E: ComplexField> ArgminDot<E, Col<E>> for ColRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &E) -> Col<E> {
+            <Self as ArgminMul<E, _>>::mul(self, other)
+        }
+    }
+
+    // Col . Scalar -> Col
+    impl<E: ComplexField> ArgminDot<E, Col<E>> for Col<E> {
+        #[inline]
+        fn dot(&self, other: &E) -> Col<E> {
+            <_ as ArgminDot<E, _>>::dot(&self.as_ref(), other)
+        }
+    }
+
+    // ColRef . Scalar -> Col
+    impl<'a, E: ComplexField> ArgminDot<ColRef<'a, E>, Col<E>> for E {
+        #[inline]
+        fn dot(&self, other: &ColRef<'a, E>) -> Col<E> {
+            <E as ArgminMul<ColRef<'a, E>, _>>::mul(self, other)
+        }
+    }
+
+    // Col . Scalar -> Col
+    impl<E: ComplexField> ArgminDot<Col<E>, Col<E>> for E {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> Col<E> {
+            <E as ArgminDot<_, _>>::dot(self, &other.as_ref())
+        }
+    }
+}
