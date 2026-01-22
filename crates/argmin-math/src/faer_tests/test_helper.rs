@@ -1,3 +1,4 @@
+use faer::Col;
 use faer::Mat;
 
 cfg_if::cfg_if! {
@@ -23,12 +24,25 @@ pub fn column_vector_from_slice<E: ComplexField + Copy>(slice: &[E]) -> Mat<E> {
     Mat::<E>::from_fn(slice.len(), 1, |ir, _ic| slice[ir])
 }
 
+/// create an owning column vector from a slice
+pub fn col_from_slice<E: ComplexField + Copy>(slice: &[E]) -> Col<E> {
+    Col::<E>::from_fn(slice.len(), |i| slice[i])
+}
+
 /// helper method to translate an nalgebra call Vector3::new(a,b,c) to the
 /// equivalent faer matrix constructor
 pub fn vector3_new<E: ComplexField + Copy>(a: E, b: E, c: E) -> Mat<E> {
     let v = column_vector_from_slice(&[a, b, c]);
     assert_eq!(v.nrows(), 3);
     assert_eq!(v.ncols(), 1);
+    v
+}
+
+/// helper method to translate and nalgebra call Vector3::new(a,b,c) to the
+/// equivalent faer col constructor
+pub fn col3_new<E: ComplexField + Copy>(a: E, b: E, c: E) -> Col<E> {
+    let v = col_from_slice(&[a, b, c]);
+    assert_eq!(v.nrows(), 3);
     v
 }
 

@@ -3,6 +3,9 @@ use faer::mat::AsMatRef;
 use faer::prelude::*;
 use faer_traits::ComplexField;
 
+#[cfg(feature = "faer_v0_21")]
+use faer::{unzip, zip};
+
 /// MatRef / Scalar -> Mat
 impl<E> ArgminSub<E, Mat<E>> for MatRef<'_, E>
 where
