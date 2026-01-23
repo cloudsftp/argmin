@@ -45,7 +45,7 @@ mod scalar_product {
     use super::*;
     use faer_traits::Conjugate;
 
-    /// ColRef . ColRef -> Col
+    /// ColRef . ColRef -> Scalar
     impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<ColRef<'_, E>, E> for ColRef<'_, E> {
         #[inline]
         fn dot(&self, other: &ColRef<'_, E>) -> E {
@@ -58,7 +58,7 @@ mod scalar_product {
         }
     }
 
-    /// Col . ColRef -> Col
+    /// Col . ColRef -> Scalar
     impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<ColRef<'_, E>, E> for Col<E> {
         #[inline]
         fn dot(&self, other: &ColRef<'_, E>) -> E {
@@ -66,7 +66,7 @@ mod scalar_product {
         }
     }
 
-    /// ColRef . Col -> Col
+    /// ColRef . Col -> Scalar
     impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<Col<E>, E> for ColRef<'_, E> {
         #[inline]
         fn dot(&self, other: &Col<E>) -> E {
@@ -74,7 +74,7 @@ mod scalar_product {
         }
     }
 
-    /// Col . Col -> Col
+    /// Col . Col -> Scalar
     impl<E: ComplexField + Conjugate<Conj = E>> ArgminDot<Col<E>, E> for Col<E> {
         #[inline]
         fn dot(&self, other: &Col<E>) -> E {
@@ -85,7 +85,7 @@ mod scalar_product {
 
 //@note(clouds) implemented for compatibility with the nalgebra implementations
 // see geo's comment in the faer_m_0_21 module (super)
-mod multiply_matrix_with_scalar {
+mod multiply_col_with_scalar {
     use super::*;
     use crate::ArgminMul;
     use faer_traits::ComplexField;
@@ -107,7 +107,7 @@ mod multiply_matrix_with_scalar {
         }
     }
 
-    // ColRef . Scalar -> Col
+    // Scalar . ColRef  -> Col
     impl<'a, E: ComplexField> ArgminDot<ColRef<'a, E>, Col<E>> for E {
         #[inline]
         fn dot(&self, other: &ColRef<'a, E>) -> Col<E> {
@@ -115,7 +115,7 @@ mod multiply_matrix_with_scalar {
         }
     }
 
-    // Col . Scalar -> Col
+    // Scalar . Col -> Col
     impl<E: ComplexField> ArgminDot<Col<E>, Col<E>> for E {
         #[inline]
         fn dot(&self, other: &Col<E>) -> Col<E> {
