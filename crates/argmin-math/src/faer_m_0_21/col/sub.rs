@@ -29,7 +29,7 @@ where
     }
 }
 /// Scalar / Col -> Col
-impl<'a, E> ArgminSub<Col<E>, Col<E>> for E
+impl<E> ArgminSub<Col<E>, Col<E>> for E
 where
     E: ComplexField,
 {
