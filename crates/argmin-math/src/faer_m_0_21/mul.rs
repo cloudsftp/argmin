@@ -20,7 +20,7 @@ where
 {
     #[inline]
     fn mul(&self, other: &MatRef<'a, E>) -> Mat<E> {
-        // commutative with MatRef + Scalar so we can fall back on that case
+        // commutative with MatRef * Scalar so we can fall back on that case
         <_ as ArgminMul<_, _>>::mul(other, self)
     }
 }
