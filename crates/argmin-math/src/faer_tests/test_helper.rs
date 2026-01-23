@@ -21,6 +21,12 @@ pub fn column_vector_from_vec<E: ComplexField + Copy>(vec: Vec<E>) -> Mat<E> {
     column_vector_from_slice(vec.as_slice())
 }
 
+/// create a column vector from a Vec instance
+/// equivalent to the nalgebra call DVector::from_vec
+pub fn col_from_vec<E: ComplexField + Copy>(vec: Vec<E>) -> Col<E> {
+    col_from_slice(vec.as_slice())
+}
+
 /// create an owning column vector from a slice
 pub fn column_vector_from_slice<E: ComplexField + Copy>(slice: &[E]) -> Mat<E> {
     Mat::<E>::from_fn(slice.len(), 1, |ir, _ic| slice[ir])
