@@ -3,7 +3,7 @@ use faer::{
     mat::{AsMatMut, AsMatRef},
     unzip, zip, Col, ColRef, Mat, MatMut, MatRef,
 };
-use faer_traits::ComplexField;
+use faer_traits::{AddByRef, ComplexField};
 
 /// ColRef + Scalar -> Col
 impl<E> ArgminAdd<E, Col<E>> for ColRef<'_, E>
