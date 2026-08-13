@@ -83,6 +83,42 @@ mod scalar_product {
     }
 }
 
+mod outer_col_product {
+    use super::*;
+
+    /// ColRef . ColRef -> Mat
+    impl<E: ComplexField> ArgminDot<ColRef<'_, E>, Mat<E>> for ColRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &ColRef<'_, E>) -> Mat<E> {
+            Mat::from_fn(self.nrows(), other.nrows(), |i, j| &self[i] * &other[j])
+        }
+    }
+
+    /// Col . ColRef -> Mat
+    impl<E: ComplexField> ArgminDot<ColRef<'_, E>, Mat<E>> for Col<E> {
+        #[inline]
+        fn dot(&self, other: &ColRef<'_, E>) -> Mat<E> {
+            <_ as ArgminDot<_, _>>::dot(&self.as_ref(), other)
+        }
+    }
+
+    /// ColRef . Col -> Mat
+    impl<E: ComplexField> ArgminDot<Col<E>, Mat<E>> for ColRef<'_, E> {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> Mat<E> {
+            <_ as ArgminDot<_, _>>::dot(self, &other.as_ref())
+        }
+    }
+
+    /// Col . Col -> Mat
+    impl<E: ComplexField> ArgminDot<Col<E>, Mat<E>> for Col<E> {
+        #[inline]
+        fn dot(&self, other: &Col<E>) -> Mat<E> {
+            <_ as ArgminDot<_, _>>::dot(&self.as_ref(), &other.as_ref())
+        }
+    }
+}
+
 //@note(clouds) implemented for compatibility with the nalgebra implementations
 // see geo's comment in the faer_m_0_21 module (super)
 mod multiply_col_with_scalar {
